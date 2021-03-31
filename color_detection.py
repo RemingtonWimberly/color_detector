@@ -6,7 +6,8 @@ import argparse
 # add this https://stackoverflow.com/questions/9037828/writing-a-help-for-python-script
 
 # Creating argument parser to take image path from command line
-ap = argparse.ArgumentParser()
+ap = argparse.ArgumentParser(description='''Color Detector 1.3''',
+    epilog="""Input a path to an image to continue.""")
 ap.add_argument('-i', '--image', required=True, help="Image Path")
 args = vars(ap.parse_args())
 img_path = args['image']
