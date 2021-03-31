@@ -42,7 +42,7 @@ def get_color_name(R, G, B):
             minimum_distance = distance
             color_name_str = csv.loc[i, "color_name"]
             # trims down the color name
-            if len(color_name_str) > 11:
+            if len(color_name_str) > 11 and ' ' in color_name_str:
                 first, *middle, last = color_name_str.split()
                 if last is not None:
                     color_name_str = first + ' ' + last
