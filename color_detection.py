@@ -37,14 +37,14 @@ def get_color_name(R, G, B):
         distance = abs(R - int(csv.loc[i, "R"])) + abs(G - int(csv.loc[i, "G"])) + abs(B - int(csv.loc[i, "B"]))
         if (distance <= minimum_distance):
             minimum_distance = distance
-            color_name = csv.loc[i, "color_name"]
+            color_name_str = csv.loc[i, "color_name"]
             # trims down the color name
-            if len(color_name) > 11:
-                first, *middle, last = color_name.split()
-                if last != None:
-                    color_name = first + ' ' + last
+            if len(color_name_str) > 11:
+                first, *middle, last = color_name_str.split()
+                if last is not None:
+                    color_name_str = first + ' ' + last
             hex = csv.loc[i, 'hex']
-    return color_name + ' ' + hex
+    return color_name_str + ' ' + hex
 
 
 # function to get x,y coordinates of mouse double click
