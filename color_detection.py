@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import argparse
 
+# add this https://stackoverflow.com/questions/9037828/writing-a-help-for-python-script
+
 # Creating argument parser to take image path from command line
 ap = argparse.ArgumentParser()
 ap.add_argument('-i', '--image', required=True, help="Image Path")
