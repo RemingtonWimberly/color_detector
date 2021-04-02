@@ -3,12 +3,11 @@ import numpy as np
 import pandas as pd
 import argparse
 
-# add this https://stackoverflow.com/questions/9037828/writing-a-help-for-python-script
 
 # Creating argument parser to take image path from command line
 ap = argparse.ArgumentParser(description='''Color Detector 1.3''',
     epilog="""Input a path to an image to continue.""")
-ap.add_argument('-i', '--image', required=True, help="Image Path")
+ap.add_argument('-i', '--image', required=True, help="Enter the Image Path to run")
 args = vars(ap.parse_args())
 img_path = args['image']
 
@@ -17,28 +16,30 @@ print('Press ESC or close the window to exit the program')
 # Reading the image with opencv
 image = cv2.imread(img_path)
 
-# declaring global variables (are used later on)
 clicked = False
 red = green = blue = xpos = ypos = 0
 
 # Reading csv file with pandas and giving names to each column
 index = ["color", "color_name", "hex", "R", "G", "B"]
-colors_urlfile = 'https://raw.githubusercontent.com/codebrainz/color-names/master/output/colors.csv'
-csv = pd.read_csv(colors_urlfile, names=index, header=None)
+colors_url = 'https://raw.githubusercontent.com/codebrainz/color-names/master/output/colors.csv'
+csv = pd.read_csv(colors_url, names=index, header=None)
 
-
-# function to calculate minimum distance from all colors and get the most matching color
 def get_color_name(R, G, B):
     """
+    calculates the minimum distance from all colors to get the best matching color
+
     :param R: red value of selection
     :param G: green value of selection
     :param B: blue value of selection
     :return: string with color name and hex value
     """
     minimum_distance = 10000
+    # set color name to not found in case it is not found
+    color_name_str = 'Color Not Found'
+    hex = 'Error'
     for i in range(len(csv)):
         distance = abs(R - int(csv.loc[i, "R"])) + abs(G - int(csv.loc[i, "G"])) + abs(B - int(csv.loc[i, "B"]))
-        if (distance <= minimum_distance):
+        if distance <= minimum_distance:
             minimum_distance = distance
             color_name_str = csv.loc[i, "color_name"]
             # trims down the color name
@@ -58,9 +59,9 @@ def get_rgb_from_coordinates(event, x, y, flags, paramaters):
         xpos = x
         ypos = y
         blue, green, red = image[y, x]
-        blue = int(blue)
-        green = int(green)
         red = int(red)
+        green = int(green)
+        blue = int(blue)
 
 
 cv2.namedWindow(img_path)
@@ -80,8 +81,9 @@ while True:
         # cv2.putText(img,text,start,font(0-7),fontScale,color,thickness,lineType )
         cv2.putText(image, color_name, (50, 50), 2, 0.8, (255, 255, 255), 2, cv2.LINE_AA)
 
-        # For very light colours we will display text in black colour
-        if red + green + blue >= 600:
+        # display light colors with black text
+        # fixed to run with lumens
+        if (red * 0.299 + green * 0.587 + blue * 0.114) > 186:
             cv2.putText(image, color_name, (50, 50), 2, 0.8, (0, 0, 0), 2, cv2.LINE_AA)
 
         clicked = False
